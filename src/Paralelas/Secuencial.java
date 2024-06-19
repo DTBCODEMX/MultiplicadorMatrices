@@ -1,12 +1,10 @@
 package Paralelas;
 
-import interfaz.ProgresoListener;
 import javax.swing.JLabel;
 import javax.swing.JTextArea;
 
 public class Secuencial extends Thread {
     
-    final ProgresoListener progresoListener;
     private final JTextArea txtAreaInfo;
     private final JTextArea txtASecuential;
     private final JLabel lblTiempoSecuencial;
@@ -16,7 +14,7 @@ public class Secuencial extends Thread {
     private int[][] matrizSecuencial;
     private volatile boolean running = true;
 
-    public Secuencial(JTextArea txtAreaInfo, JTextArea txtASecuential, ProgresoListener progresoListener, JLabel lblTiempoSecuencial, int tamañoMatriz, int[][] matriz1, int[][] matriz2, int[][] matrizSecuencial) {
+    public Secuencial(JTextArea txtAreaInfo, JTextArea txtASecuential, JLabel lblTiempoSecuencial, int tamañoMatriz, int[][] matriz1, int[][] matriz2, int[][] matrizSecuencial) {
         this.txtAreaInfo = txtAreaInfo;
         this.txtASecuential = txtASecuential;
         this.lblTiempoSecuencial = lblTiempoSecuencial;
@@ -24,7 +22,6 @@ public class Secuencial extends Thread {
         this.matriz1 = matriz1;
         this.matriz2 = matriz2;
         this.matrizSecuencial = matrizSecuencial;
-        this.progresoListener = progresoListener;
     }
 
     public void stopThread() {
@@ -62,7 +59,6 @@ public class Secuencial extends Thread {
                 }
                 progresoHilo++;
                 double porcentaje = ((i + 1) * 100.0) / filas;
-                progresoListener.progresoActualizado(0, porcentaje);
             }
 
             time_end = System.currentTimeMillis();

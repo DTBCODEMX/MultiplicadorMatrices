@@ -1,58 +1,29 @@
 package Paralelas;
 
 import componentes.HiloUI;
-import interfaz.ProgresoListener;
-import java.lang.management.ManagementFactory;
-import java.lang.management.ThreadInfo;
-import java.lang.management.ThreadMXBean;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
-public class UIMain extends javax.swing.JFrame implements ProgresoListener {
+public class UIMain extends javax.swing.JFrame{
 
     Concurrente objConcurrente;
     ArrayList<HiloUI> hilosUI;
-    boolean secuencial = false, concurrente = false;
+    boolean secuencial = false;
+    boolean concurrente = false;
     int tamañoMatriz, numHilos;
     int[][] matriz1;
     int[][] matriz2;
     int[][] matrizSecuencial;
     int[][] matrizConcurrente;
-
+;
     public UIMain() throws RemoteException {
         initComponents();
         this.setLocationRelativeTo(null);
-        objConcurrente = new Concurrente(this);
+        objConcurrente = new Concurrente();
         hilosUI = new ArrayList<>();
-    }
-
-    @Override
-    public void progresoActualizado(int hilo, double porcentaje) {
-        hilosUI.get(hilo).actualizarPorcentaje(porcentaje);
-        pnlContenedorHilos.repaint();
-        pnlContenedorHilos.revalidate();
-    }
-
-    public void setProcessBar() {
-        hilosUI.removeAll(hilosUI);
-        pnlContenedorHilos.removeAll();
-        if (secuencial) {
-            HiloUI objHiloUI = new HiloUI("" + 1);
-            pnlContenedorHilos.add(objHiloUI);
-            hilosUI.add(objHiloUI);
-
-        } else if (concurrente) {
-            for (int i = 0; i < numHilos; i++) {
-                HiloUI objHiloUI = new HiloUI("" + 1);
-                pnlContenedorHilos.add(objHiloUI);
-                hilosUI.add(objHiloUI);
-            }
-        }
-        pnlContenedorHilos.repaint();
-        pnlContenedorHilos.revalidate();
     }
 
     private void iniciar() {
@@ -92,7 +63,7 @@ public class UIMain extends javax.swing.JFrame implements ProgresoListener {
                     }
 
                     if (x == tamañoMatriz - 1) {
-                        txtAreaMatrix1.append("]\n");
+                        txtAreaMatrix1.append("]\n");  //termina de acomodar los numeros aleatorios con append
                     }
                 }
             }
@@ -115,7 +86,6 @@ public class UIMain extends javax.swing.JFrame implements ProgresoListener {
                 }
             }
         }
-
     }
 
     private void cleanAll() {
@@ -133,15 +103,8 @@ public class UIMain extends javax.swing.JFrame implements ProgresoListener {
     public void showPnlSecuentialConcurrent() {
         pnlContainer.removeAll();
         pnlContainer.add(pnlInfo);
-        pnlContainer.repaint();
         pnlContainer.revalidate();
-    }
-
-    public void showPnlBoth() {
-        pnlContainer.removeAll();
-        pnlContainer.add(pnlParallel);
         pnlContainer.repaint();
-        pnlContainer.revalidate();
     }
 
     @SuppressWarnings("unchecked")
@@ -149,23 +112,14 @@ public class UIMain extends javax.swing.JFrame implements ProgresoListener {
     private void initComponents() {
 
         pnlBoard = new javax.swing.JPanel();
-        pblBtns = new javax.swing.JPanel();
-        btnStart = new javax.swing.JButton();
-        btnRestart = new javax.swing.JButton();
-        btnSecuential = new javax.swing.JButton();
-        btnConcurrent = new javax.swing.JButton();
-        btnBoth = new javax.swing.JButton();
-        btnClear = new javax.swing.JButton();
         lblTiempo = new javax.swing.JLabel();
         lblTiempoSecuencial = new javax.swing.JLabel();
         lblTiempoConcurrente = new javax.swing.JLabel();
         lblMatrizSize = new javax.swing.JLabel();
         lblCantHilos = new javax.swing.JLabel();
-        lblTiempoParalelo = new javax.swing.JLabel();
         pnlMatrixAB = new javax.swing.JPanel();
         scrllPneAreaMatrix1 = new javax.swing.JScrollPane();
         txtAreaMatrix1 = new javax.swing.JTextArea();
-        lblX = new javax.swing.JLabel();
         scrllPneAreaMatrix2 = new javax.swing.JScrollPane();
         txtAreaMatrix2 = new javax.swing.JTextArea();
         pnlContainer = new javax.swing.JPanel();
@@ -177,78 +131,39 @@ public class UIMain extends javax.swing.JFrame implements ProgresoListener {
         txtASecuential = new javax.swing.JTextArea();
         scrllPneConcurrent = new javax.swing.JScrollPane();
         txtAConcurrent = new javax.swing.JTextArea();
-        scrllPneC = new javax.swing.JScrollPane();
-        pnlContenedorHilos = new javax.swing.JPanel();
+        pblBtns = new javax.swing.JPanel();
+        btnStart = new javax.swing.JButton();
+        btnRestart = new javax.swing.JButton();
+        btnSecuential = new javax.swing.JButton();
+        btnConcurrent = new javax.swing.JButton();
+        txtResultado = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("PROYECTO FINAL 21310446");
+        setMaximumSize(new java.awt.Dimension(0, 0));
 
-        pblBtns.setLayout(new java.awt.GridLayout(3, 0, 5, 5));
+        pnlBoard.setBackground(new java.awt.Color(255, 153, 153));
+        pnlBoard.setMaximumSize(null);
 
-        btnStart.setBackground(new java.awt.Color(0, 102, 204));
-        btnStart.setText("Start");
-        btnStart.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnStartActionPerformed(evt);
-            }
-        });
-        pblBtns.add(btnStart);
-
-        btnRestart.setBackground(new java.awt.Color(0, 153, 255));
-        btnRestart.setText("Restart");
-        btnRestart.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnRestartActionPerformed(evt);
-            }
-        });
-        pblBtns.add(btnRestart);
-
-        btnSecuential.setBackground(new java.awt.Color(0, 255, 0));
-        btnSecuential.setText("Secuential");
-        btnSecuential.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnSecuentialActionPerformed(evt);
-            }
-        });
-        pblBtns.add(btnSecuential);
-
-        btnConcurrent.setBackground(new java.awt.Color(255, 0, 0));
-        btnConcurrent.setText("Concurrent");
-        btnConcurrent.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnConcurrentActionPerformed(evt);
-            }
-        });
-        pblBtns.add(btnConcurrent);
-
-        btnBoth.setBackground(new java.awt.Color(255, 153, 0));
-        btnBoth.setText("Both");
-        btnBoth.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnBothActionPerformed(evt);
-            }
-        });
-        pblBtns.add(btnBoth);
-
-        btnClear.setBackground(new java.awt.Color(255, 255, 255));
-        btnClear.setText("Clean TextArea");
-        btnClear.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnClearActionPerformed(evt);
-            }
-        });
-        pblBtns.add(btnClear);
-
+        lblTiempo.setFont(new java.awt.Font("Cascadia Code", 1, 24)); // NOI18N
+        lblTiempo.setForeground(new java.awt.Color(255, 255, 255));
         lblTiempo.setText("TIEMPO DE EJECUCION");
 
+        lblTiempoSecuencial.setFont(new java.awt.Font("Cascadia Code", 1, 14)); // NOI18N
+        lblTiempoSecuencial.setForeground(new java.awt.Color(255, 255, 255));
         lblTiempoSecuencial.setText("Secuencial : ");
 
+        lblTiempoConcurrente.setFont(new java.awt.Font("Cascadia Code", 1, 14)); // NOI18N
+        lblTiempoConcurrente.setForeground(new java.awt.Color(255, 255, 255));
         lblTiempoConcurrente.setText("Concurrente : ");
 
+        lblMatrizSize.setFont(new java.awt.Font("Cascadia Code", 1, 14)); // NOI18N
+        lblMatrizSize.setForeground(new java.awt.Color(255, 255, 255));
         lblMatrizSize.setText("Tamaño de la matriz : ");
 
+        lblCantHilos.setFont(new java.awt.Font("Cascadia Code", 1, 14)); // NOI18N
+        lblCantHilos.setForeground(new java.awt.Color(255, 255, 255));
         lblCantHilos.setText("Cantidad de hilos : ");
-
-        lblTiempoParalelo.setText("Paralelo : ");
 
         javax.swing.GroupLayout pnlBoardLayout = new javax.swing.GroupLayout(pnlBoard);
         pnlBoard.setLayout(pnlBoardLayout);
@@ -257,26 +172,22 @@ public class UIMain extends javax.swing.JFrame implements ProgresoListener {
             .addGroup(pnlBoardLayout.createSequentialGroup()
                 .addGroup(pnlBoardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(pnlBoardLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(pnlBoardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(pnlBoardLayout.createSequentialGroup()
-                                .addComponent(lblMatrizSize, javax.swing.GroupLayout.PREFERRED_SIZE, 232, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 0, Short.MAX_VALUE))
-                            .addComponent(lblTiempoParalelo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                    .addGroup(pnlBoardLayout.createSequentialGroup()
                         .addGap(6, 6, 6)
                         .addComponent(lblTiempo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(pnlBoardLayout.createSequentialGroup()
                         .addContainerGap()
                         .addGroup(pnlBoardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblTiempoConcurrente, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(lblTiempoSecuencial, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                            .addComponent(lblTiempoSecuencial, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(pnlBoardLayout.createSequentialGroup()
+                                .addComponent(lblTiempoConcurrente, javax.swing.GroupLayout.PREFERRED_SIZE, 311, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE))))
                     .addGroup(pnlBoardLayout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(lblCantHilos, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(pnlBoardLayout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(pblBtns, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addComponent(lblMatrizSize, javax.swing.GroupLayout.PREFERRED_SIZE, 301, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         pnlBoardLayout.setVerticalGroup(
@@ -289,18 +200,15 @@ public class UIMain extends javax.swing.JFrame implements ProgresoListener {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lblTiempoConcurrente)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(lblTiempoParalelo)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lblMatrizSize)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lblCantHilos)
-                .addGap(18, 18, 18)
-                .addComponent(pblBtns, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(19, 19, 19))
+                .addGap(102, 102, 102))
         );
 
         pnlMatrixAB.setLayout(new javax.swing.BoxLayout(pnlMatrixAB, javax.swing.BoxLayout.LINE_AXIS));
 
+        txtAreaMatrix1.setBackground(new java.awt.Color(204, 102, 255));
         txtAreaMatrix1.setColumns(20);
         txtAreaMatrix1.setFont(new java.awt.Font("Dialog", 0, 8)); // NOI18N
         txtAreaMatrix1.setRows(5);
@@ -309,10 +217,7 @@ public class UIMain extends javax.swing.JFrame implements ProgresoListener {
 
         pnlMatrixAB.add(scrllPneAreaMatrix1);
 
-        lblX.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-        lblX.setText("X");
-        pnlMatrixAB.add(lblX);
-
+        txtAreaMatrix2.setBackground(new java.awt.Color(153, 255, 255));
         txtAreaMatrix2.setColumns(20);
         txtAreaMatrix2.setFont(new java.awt.Font("Dialog", 0, 8)); // NOI18N
         txtAreaMatrix2.setRows(5);
@@ -321,36 +226,20 @@ public class UIMain extends javax.swing.JFrame implements ProgresoListener {
 
         pnlMatrixAB.add(scrllPneAreaMatrix2);
 
-        pnlContainer.setLayout(new java.awt.CardLayout());
+        pnlInfo.setLayout(new java.awt.BorderLayout());
+
+        scrllPneAreaInfo.setAutoscrolls(true);
 
         txtAreaInfo.setColumns(20);
         txtAreaInfo.setFont(new java.awt.Font("Dialog", 0, 8)); // NOI18N
         txtAreaInfo.setRows(5);
         txtAreaInfo.setEnabled(false);
+        txtAreaInfo.setMaximumSize(null);
+        txtAreaInfo.setMinimumSize(null);
+        txtAreaInfo.setPreferredSize(new java.awt.Dimension(156, 156));
         scrllPneAreaInfo.setViewportView(txtAreaInfo);
 
-        javax.swing.GroupLayout pnlInfoLayout = new javax.swing.GroupLayout(pnlInfo);
-        pnlInfo.setLayout(pnlInfoLayout);
-        pnlInfoLayout.setHorizontalGroup(
-            pnlInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1391, Short.MAX_VALUE)
-            .addGroup(pnlInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(pnlInfoLayout.createSequentialGroup()
-                    .addGap(0, 0, Short.MAX_VALUE)
-                    .addComponent(scrllPneAreaInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 1391, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(0, 0, Short.MAX_VALUE)))
-        );
-        pnlInfoLayout.setVerticalGroup(
-            pnlInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 476, Short.MAX_VALUE)
-            .addGroup(pnlInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(pnlInfoLayout.createSequentialGroup()
-                    .addGap(0, 0, Short.MAX_VALUE)
-                    .addComponent(scrllPneAreaInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 476, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(0, 0, Short.MAX_VALUE)))
-        );
-
-        pnlContainer.add(pnlInfo, "card4");
+        pnlInfo.add(scrllPneAreaInfo, java.awt.BorderLayout.CENTER);
 
         pnlParallel.setLayout(new javax.swing.BoxLayout(pnlParallel, javax.swing.BoxLayout.LINE_AXIS));
 
@@ -370,37 +259,107 @@ public class UIMain extends javax.swing.JFrame implements ProgresoListener {
 
         pnlParallel.add(scrllPneConcurrent);
 
-        pnlContainer.add(pnlParallel, "card3");
+        javax.swing.GroupLayout pnlContainerLayout = new javax.swing.GroupLayout(pnlContainer);
+        pnlContainer.setLayout(pnlContainerLayout);
+        pnlContainerLayout.setHorizontalGroup(
+            pnlContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(pnlInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 778, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(pnlParallel, javax.swing.GroupLayout.PREFERRED_SIZE, 778, javax.swing.GroupLayout.PREFERRED_SIZE)
+        );
+        pnlContainerLayout.setVerticalGroup(
+            pnlContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlContainerLayout.createSequentialGroup()
+                .addGroup(pnlContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(pnlInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 412, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(pnlParallel, javax.swing.GroupLayout.PREFERRED_SIZE, 379, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
+        );
 
-        pnlContenedorHilos.setBackground(new java.awt.Color(0, 0, 0));
-        pnlContenedorHilos.setLayout(new javax.swing.BoxLayout(pnlContenedorHilos, javax.swing.BoxLayout.Y_AXIS));
-        scrllPneC.setViewportView(pnlContenedorHilos);
+        pblBtns.setLayout(new java.awt.GridLayout(2, 0, 5, 5));
+
+        btnStart.setBackground(new java.awt.Color(51, 255, 51));
+        btnStart.setFont(new java.awt.Font("Cascadia Code", 1, 24)); // NOI18N
+        btnStart.setForeground(new java.awt.Color(255, 255, 255));
+        btnStart.setText("START");
+        btnStart.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnStartActionPerformed(evt);
+            }
+        });
+        pblBtns.add(btnStart);
+
+        btnRestart.setBackground(new java.awt.Color(153, 0, 153));
+        btnRestart.setFont(new java.awt.Font("Cascadia Code", 1, 24)); // NOI18N
+        btnRestart.setForeground(new java.awt.Color(255, 255, 255));
+        btnRestart.setText("RESTART");
+        btnRestart.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRestartActionPerformed(evt);
+            }
+        });
+        pblBtns.add(btnRestart);
+
+        btnSecuential.setBackground(new java.awt.Color(0, 0, 255));
+        btnSecuential.setFont(new java.awt.Font("Cascadia Code", 1, 24)); // NOI18N
+        btnSecuential.setForeground(new java.awt.Color(255, 255, 255));
+        btnSecuential.setText("SECUENTIAL");
+        btnSecuential.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSecuentialActionPerformed(evt);
+            }
+        });
+        pblBtns.add(btnSecuential);
+
+        btnConcurrent.setBackground(new java.awt.Color(51, 204, 255));
+        btnConcurrent.setFont(new java.awt.Font("Cascadia Code", 1, 24)); // NOI18N
+        btnConcurrent.setForeground(new java.awt.Color(255, 255, 255));
+        btnConcurrent.setText("CONCURRENT");
+        btnConcurrent.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnConcurrentActionPerformed(evt);
+            }
+        });
+        pblBtns.add(btnConcurrent);
+
+        txtResultado.setFont(new java.awt.Font("Cascadia Code", 1, 24)); // NOI18N
+        txtResultado.setText("RESULTADO:");
+        txtResultado.setToolTipText("");
+        txtResultado.setAlignmentX(10.0F);
+        txtResultado.setAlignmentY(2.0F);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(pnlBoard, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(scrllPneC, javax.swing.GroupLayout.PREFERRED_SIZE, 299, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(pnlMatrixAB, javax.swing.GroupLayout.PREFERRED_SIZE, 819, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(pnlContainer, javax.swing.GroupLayout.PREFERRED_SIZE, 1391, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(pnlMatrixAB, javax.swing.GroupLayout.PREFERRED_SIZE, 778, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtResultado, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 778, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(pnlBoard, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(pnlContainer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(pblBtns, javax.swing.GroupLayout.PREFERRED_SIZE, 421, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(21, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(pnlBoard, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(pnlMatrixAB, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(scrllPneC)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(pnlMatrixAB, javax.swing.GroupLayout.PREFERRED_SIZE, 404, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(3, 3, 3)
+                .addComponent(txtResultado)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(pnlContainer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(pnlContainer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(375, 375, 375)
+                .addComponent(pnlBoard, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(pblBtns, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         pack();
@@ -408,13 +367,12 @@ public class UIMain extends javax.swing.JFrame implements ProgresoListener {
 
     private void btnSecuentialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSecuentialActionPerformed
         if (matriz1 != null && matriz2 != null) {
-            Thread hiloSecuencial = new Secuencial(txtAreaInfo, txtASecuential, this, lblTiempoSecuencial, tamañoMatriz, matriz1, matriz2, matrizSecuencial);
+            Thread hiloSecuencial = new Secuencial(txtAreaInfo, txtASecuential, lblTiempoSecuencial, tamañoMatriz, matriz1, matriz2, matrizSecuencial);
             secuencial = true;
-            setProcessBar();
             hiloSecuencial.start();
             secuencial = false;
         } else {
-            JOptionPane.showMessageDialog(this, "Start the program first to give values to both of the matrix");
+            JOptionPane.showMessageDialog(this, "Presiona start primero para darle valores a la matriz");
         }
     }//GEN-LAST:event_btnSecuentialActionPerformed
 
@@ -423,7 +381,6 @@ public class UIMain extends javax.swing.JFrame implements ProgresoListener {
             int tiempoEjecucion = 0;
 
             concurrente = true;
-            setProcessBar();
             objConcurrente.setNumHilos(numHilos);
             matrizConcurrente = objConcurrente.multiplicar(matriz1, matriz2);
             tiempoEjecucion = objConcurrente.getTiempoEjecucion();
@@ -443,20 +400,10 @@ public class UIMain extends javax.swing.JFrame implements ProgresoListener {
         }
     }//GEN-LAST:event_btnConcurrentActionPerformed
 
-    private void btnClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearActionPerformed
-        txtAreaInfo.setText("");
-        txtASecuential.setText("");
-        txtAConcurrent.setText("");
-    }//GEN-LAST:event_btnClearActionPerformed
-
     private void btnRestartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRestartActionPerformed
         cleanAll();
         iniciar();
     }//GEN-LAST:event_btnRestartActionPerformed
-
-    private void btnBothActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBothActionPerformed
-
-    }//GEN-LAST:event_btnBothActionPerformed
 
     private void btnStartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStartActionPerformed
         btnStart.setEnabled(false);
@@ -502,8 +449,6 @@ public class UIMain extends javax.swing.JFrame implements ProgresoListener {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnBoth;
-    private javax.swing.JButton btnClear;
     private javax.swing.JButton btnConcurrent;
     private javax.swing.JButton btnRestart;
     private javax.swing.JButton btnSecuential;
@@ -512,20 +457,16 @@ public class UIMain extends javax.swing.JFrame implements ProgresoListener {
     private javax.swing.JLabel lblMatrizSize;
     private javax.swing.JLabel lblTiempo;
     private javax.swing.JLabel lblTiempoConcurrente;
-    private javax.swing.JLabel lblTiempoParalelo;
     private javax.swing.JLabel lblTiempoSecuencial;
-    private javax.swing.JLabel lblX;
     private javax.swing.JPanel pblBtns;
     private javax.swing.JPanel pnlBoard;
     private javax.swing.JPanel pnlContainer;
-    private javax.swing.JPanel pnlContenedorHilos;
     private javax.swing.JPanel pnlInfo;
     private javax.swing.JPanel pnlMatrixAB;
     private javax.swing.JPanel pnlParallel;
     private javax.swing.JScrollPane scrllPneAreaInfo;
     private javax.swing.JScrollPane scrllPneAreaMatrix1;
     private javax.swing.JScrollPane scrllPneAreaMatrix2;
-    private javax.swing.JScrollPane scrllPneC;
     private javax.swing.JScrollPane scrllPneConcurrent;
     private javax.swing.JScrollPane scrllPneSecuential;
     private javax.swing.JTextArea txtAConcurrent;
@@ -533,5 +474,6 @@ public class UIMain extends javax.swing.JFrame implements ProgresoListener {
     private javax.swing.JTextArea txtAreaInfo;
     private javax.swing.JTextArea txtAreaMatrix1;
     private javax.swing.JTextArea txtAreaMatrix2;
+    private javax.swing.JLabel txtResultado;
     // End of variables declaration//GEN-END:variables
 }

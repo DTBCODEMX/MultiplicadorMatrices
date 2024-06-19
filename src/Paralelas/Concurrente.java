@@ -1,6 +1,5 @@
 package Paralelas;
 
-import interfaz.ProgresoListener;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
@@ -9,14 +8,10 @@ import java.util.concurrent.Future;
 
 public class Concurrente {
 
-    final ProgresoListener progresoListener;
     private int numHilos;
     private int tiempoEjecucion;
 
-    public Concurrente(ProgresoListener progresoListener) {
-        this.progresoListener = progresoListener;
-        this.tiempoEjecucion = 0;
-    }
+
     
     public int[][] multiplicar(int[][] matrix1, int[][] matrix2) {
         if (matrix1 == null || matrix2 == null) {
@@ -46,9 +41,7 @@ public class Concurrente {
                             }
                         }
                         progresoHilo++;
-                        double porcentaje = (progresoHilo * 100.0) / (filaFin - filaInicio);
-                        progresoListener.progresoActualizado(hiloFinal, porcentaje);
-                    }
+                                         }
                     return null;
                 }));
             }
