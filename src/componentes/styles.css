@@ -1,0 +1,39 @@
+.root {
+    -fx-background-color: #000000; /* Fondo negro */
+}
+
+.label {
+    -fx-text-fill: #FFFFFF; /* Texto blanco */
+    -fx-font-weight: bold; /* Títulos en negrita */
+    -fx-font-size: 14px;
+}
+
+.text-field, .text-area {
+    -fx-text-fill: #7200ff; /* Texto blanco */
+    -fx-font-size: 14px;
+    -fx-background-color: #282828; /* Fondo oscuro para campos de texto */
+    -fx-border-color: #4B0082; /* Color del borde */
+    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
+}
+
+.button {
+    -fx-background-color: #4B0082; /* Fondo del botón */
+    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
+    -fx-text-fill: #FFFFFF; /* Texto blanco */
+}
+
+.scroll-pane {
+    -fx-background: #000000; /* Fondo negro del ScrollPane */
+    -fx-border-color: #4B0082; /* Color del borde */
+    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
+    -fx-padding: 10px; /* Padding interno */
+}
+
+.scroll-pane .viewport {
+    -fx-background: #000000; /* Fondo negro del contenido del ScrollPane */
+}
+
+
